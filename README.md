@@ -43,6 +43,14 @@
 
 </div>
 
+<br>
+
+<div align="center">
+  <a href="https://www.youtube.com/@Tuna-zpxv">
+    <img src="https://img.shields.io/badge/YouTube-Abone%20Ol-Subscribe?style=for-the-badge&logo=youtube&logoColor=white&color=FF0000" alt="YouTube Channel">
+  </a>
+</div>
+
 ---
 
 ## Screenshots
