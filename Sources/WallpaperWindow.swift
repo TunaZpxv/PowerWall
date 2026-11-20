@@ -52,11 +52,48 @@ final class WallpaperWindow: NSWindow {
         clear()
         let ext = url.pathExtension.lowercased()
         switch ext {
-        case "gif":                                    loadGIF(url: url)
-        case "jpg", "jpeg", "png", "heic", "webp":    loadStatic(url: url)
-        default:                                       loadVideo(url: url)
+        case "gif":
+            loadGIF(url: url)
+            orderFront(nil)
+        case "jpg", "jpeg", "png", "heic", "webp":
+            // Statik resim: sistem duvar kağıdı olarak ayarla → kilit ekranında da görünür
+            setSystemWallpaper(url: url)
+            // NSWindow'u gizle — sistem zaten gösteriyor
+            orderOut(nil)
+        default:
+            // Video: NSWindow ile göster
+            loadVideo(url: url)
+            orderFront(nil)
         }
-        orderFront(nil)
+    }
+
+    // MARK: - Sistem duvar kağıdı (statik resimler için — kilit ekranını da etkiler)
+    private var previousSystemWallpaper: URL?
+
+    func setSystemWallpaper(url: URL) {
+        let options: [NSWorkspace.DesktopImageOptionKey: Any] = [
+            .imageScaling: NSImageScaling.scaleProportionallyUpOrDown.rawValue,
+            .allowClipping: true
+        ]
+        for screen in NSScreen.screens {
+            // Mevcut duvar kağıdını sakla (restore için)
+            if previousSystemWallpaper == nil {
+                previousSystemWallpaper = NSWorkspace.shared.desktopImageURL(for: screen)
+            }
+            try? NSWorkspace.shared.setDesktopImageURL(url, for: screen, options: options)
+        }
+    }
+
+    func restoreSystemWallpaper() {
+        guard let prev = previousSystemWallpaper else { return }
+        let options: [NSWorkspace.DesktopImageOptionKey: Any] = [
+            .imageScaling: NSImageScaling.scaleProportionallyUpOrDown.rawValue,
+            .allowClipping: true
+        ]
+        for screen in NSScreen.screens {
+            try? NSWorkspace.shared.setDesktopImageURL(prev, for: screen, options: options)
+        }
+        previousSystemWallpaper = nil
     }
 
     // MARK: - Fade geçiş efekti
@@ -118,11 +155,13 @@ final class WallpaperWindow: NSWindow {
             fadeTransition {
                 self.currentURL = nil
                 self.clear()
+                self.restoreSystemWallpaper()
                 self.orderOut(nil)
             }
         } else {
             currentURL = nil
             clear()
+            restoreSystemWallpaper()
             orderOut(nil)
         }
     }

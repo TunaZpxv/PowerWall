@@ -37,7 +37,11 @@
 
 ## Demo
 
-https://github.com/WeoxStudio/PowerWall/raw/main/video/demo.mov
+<div align="center">
+
+[Watch the demo on YouTube](https://www.youtube.com/shorts/g8qWP2xXVsU)
+
+</div>
 
 ---
 
