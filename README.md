@@ -168,7 +168,7 @@ If PowerWall saves you a little joy every day ☕
 
 <div align="center">
   <a href="mailto:tunazpxv@gmail.com">
-    <img src="https://img.shields.io/badge/Email-tunazpxv@gmail.com-red?style=for-the-badge&logo=gmail&logoColor=white" alt="Contact Email">
+    <img src="assets/contact-icon.jpg" width="32" alt="Contact">
   </a>
 </div>
 
