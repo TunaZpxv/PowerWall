@@ -19,6 +19,7 @@ $SWIFT \
   Sources/WallpaperWindow.swift \
   Sources/WallpaperManager.swift \
   Sources/Prefs.swift \
+  Sources/Localization.swift \
   Sources/SettingsWindow.swift \
   Sources/OnboardingWindow.swift \
   Sources/AppDelegate.swift \
@@ -27,6 +28,7 @@ $SWIFT \
   -framework AVFoundation \
   -framework AVKit \
   -framework IOKit \
+  -framework ServiceManagement \
   -swift-version 5 \
   -sdk "$SDK" \
   -target arm64-apple-macos14.0

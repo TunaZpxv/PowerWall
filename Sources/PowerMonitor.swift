@@ -11,7 +11,7 @@ final class PowerMonitor {
     func start() {
         isPluggedIn = readPowerState()
 
-        // IOKit callback
+        // IOKit callback — common modlara ekle (menü açıkken de çalışsın)
         let ctx = Unmanaged.passRetained(self).toOpaque()
         let src = IOPSNotificationCreateRunLoopSource({ ptr in
             guard let ptr else { return }
@@ -21,24 +21,28 @@ final class PowerMonitor {
 
         if let src {
             self.source = src
-            CFRunLoopAddSource(CFRunLoopGetMain(), src, .defaultMode)
+            CFRunLoopAddSource(CFRunLoopGetMain(), src, .commonModes)
         }
 
-        // Yedek sabit polling: 1 saniyede bir
-        steadyTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+        // Yedek sabit polling: 1 saniyede bir — common modlarda (menü açıkken de çalışsın)
+        let timer = Timer(timeInterval: 1.0, repeats: true) { [weak self] _ in
             self?.checkAndNotify()
         }
+        RunLoop.main.add(timer, forMode: .common)
+        steadyTimer = timer
     }
 
     /// Güç değişimi anında 100ms aralıklarla 10 kez kontrol — gecikmeyi sıfırlar
     private func startBurstPolling() {
         burstTimer?.invalidate()
         var count = 0
-        burstTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] t in
+        let timer = Timer(timeInterval: 0.1, repeats: true) { [weak self] t in
             self?.checkAndNotify()
             count += 1
             if count >= 10 { t.invalidate() }
         }
+        RunLoop.main.add(timer, forMode: .common)
+        burstTimer = timer
     }
 
     private func checkAndNotify() {

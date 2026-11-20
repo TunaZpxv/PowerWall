@@ -1,5 +1,6 @@
 import AppKit
 import UniformTypeIdentifiers
+import ServiceManagement
 
 protocol SettingsDelegate: AnyObject {
     func settingsDidChange()
@@ -13,22 +14,26 @@ final class SettingsWindow: NSWindowController, NSWindowDelegate {
     private var batteryMode: String = "same"
     private var batteryURL: URL?
 
-    // UI
-    private let pluggedCard = MediaCard(label: "Prize bağlıyken", icon: "bolt.fill")
-    private let batterySegment = NSSegmentedControl()
-    private let batteryCard = MediaCard(label: "Pildeyken özel dosya", icon: "battery.50")
-    private let saveBtn = NSButton(title: "Kaydet", target: nil, action: nil)
-    private let cancelBtn = NSButton(title: "İptal", target: nil, action: nil)
-    private let batteryHeader = NSTextField(labelWithString: "Pildeyken")
+    private let pluggedCard      = MediaCard(label: "", icon: "bolt.fill",    accent: .systemBlue)
+    private let batterySegment   = NSSegmentedControl()
+    private let batteryCard      = MediaCard(label: "", icon: "battery.50",   accent: .systemGreen)
+    private let batteryHeader    = NSTextField(labelWithString: "")
+    // loginToggle removed — launch at login is in menu bar only
+    private let saveBtn   = NSButton(title: "", target: nil, action: nil)
+    private let cancelBtn = NSButton(title: "", target: nil, action: nil)
+
+    // Login permission warning row (shown when permission was denied)
+    private var loginWarningRow: NSView?
 
     convenience init() {
         let win = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 500, height: 420),
-            styleMask: [.titled, .closable],
+            contentRect: NSRect(x: 0, y: 0, width: 480, height: 540),
+            styleMask: [.titled, .closable, .fullSizeContentView],
             backing: .buffered,
             defer: false
         )
-        win.title = "PowerWall — Ayarlar"
+        win.title = "PowerWall"
+        win.titlebarAppearsTransparent = true
         win.center()
         self.init(window: win)
         win.delegate = self
@@ -38,104 +43,267 @@ final class SettingsWindow: NSWindowController, NSWindowDelegate {
 
     private func buildUI() {
         guard let cv = window?.contentView else { return }
+        cv.wantsLayer = true
 
-        let titleLabel = NSTextField(labelWithString: "Duvar Kağıdı Ayarları")
-        titleLabel.font = .systemFont(ofSize: 17, weight: .semibold)
+        // Header bar
+        let headerBar = NSView()
+        headerBar.wantsLayer = true
+        headerBar.layer?.backgroundColor = NSColor.controlBackgroundColor.withAlphaComponent(0.5).cgColor
+        headerBar.translatesAutoresizingMaskIntoConstraints = false
+        cv.addSubview(headerBar)
 
-        // Priz kartı
-        pluggedCard.onPick = { [weak self] url in
-            self?.pluggedURL = url
-            self?.pluggedCard.setURL(url)
-        }
-        pluggedCard.onClear = { [weak self] in
-            self?.pluggedURL = nil
-            self?.pluggedCard.setURL(nil)
-        }
+        let headerTitle = NSTextField(labelWithString: L.s(.settingsTitle))
+        headerTitle.font = .systemFont(ofSize: 15, weight: .semibold)
+        headerTitle.translatesAutoresizingMaskIntoConstraints = false
+        headerBar.addSubview(headerTitle)
 
-        // Pil segmented control
+        let sep = NSBox(); sep.boxType = .separator
+        sep.translatesAutoresizingMaskIntoConstraints = false
+        cv.addSubview(sep)
+
+        // Plugged card
+        pluggedCard.headerLabel.stringValue = L.s(.pluggedSection)
+        pluggedCard.onPick  = { [weak self] url in self?.pluggedURL = url; self?.pluggedCard.setURL(url) }
+        pluggedCard.onClear = { [weak self] in self?.pluggedURL = nil; self?.pluggedCard.setURL(nil) }
+
+        // Battery segment
         batterySegment.segmentCount = 3
-        batterySegment.setLabel("Prizdekilyle aynı", forSegment: 0)
-        batterySegment.setLabel("Varsayılan macOS", forSegment: 1)
-        batterySegment.setLabel("Farklı dosya seç", forSegment: 2)
+        batterySegment.setLabel(L.s(.batteryModeSame),    forSegment: 0)
+        batterySegment.setLabel(L.s(.batteryModeDefault), forSegment: 1)
+        batterySegment.setLabel(L.s(.batteryModeCustom),  forSegment: 2)
         batterySegment.trackingMode = .selectOne
         batterySegment.selectedSegment = 0
         batterySegment.target = self
         batterySegment.action = #selector(batterySegmentChanged)
 
         batteryHeader.font = .systemFont(ofSize: 13, weight: .medium)
+        batteryHeader.textColor = .secondaryLabelColor
 
-        // Pil özel dosya kartı
-        batteryCard.onPick = { [weak self] url in
-            self?.batteryURL = url
-            self?.batteryCard.setURL(url)
-        }
-        batteryCard.onClear = { [weak self] in
-            self?.batteryURL = nil
-            self?.batteryCard.setURL(nil)
-        }
+        batteryCard.headerLabel.stringValue = L.s(.batterySection)
+        batteryCard.onPick  = { [weak self] url in self?.batteryURL = url; self?.batteryCard.setURL(url) }
+        batteryCard.onClear = { [weak self] in self?.batteryURL = nil; self?.batteryCard.setURL(nil) }
         batteryCard.isHidden = true
 
-        // Kaydet / İptal
-        saveBtn.bezelStyle = .rounded
-        saveBtn.keyEquivalent = "\r"
-        saveBtn.target = self
-        saveBtn.action = #selector(save)
+        // Login row removed from settings — it lives in the menu bar
 
+        // Warning row (shown if permission required)
+        let warnRow = makeLoginWarningRow()
+        loginWarningRow = warnRow
+        refreshWarningVisibility()
+
+        // Language row
+        let langRow = makeLangRow()
+
+        // Buttons
+        saveBtn.title   = L.s(.save)
+        cancelBtn.title = L.s(.cancel)
+        saveBtn.bezelStyle   = .rounded
         cancelBtn.bezelStyle = .rounded
-        cancelBtn.target = self
-        cancelBtn.action = #selector(cancel)
+        saveBtn.translatesAutoresizingMaskIntoConstraints   = false
+        cancelBtn.translatesAutoresizingMaskIntoConstraints = false
+        saveBtn.keyEquivalent = "\r"
+        saveBtn.target = self;   saveBtn.action = #selector(save)
+        cancelBtn.target = self; cancelBtn.action = #selector(cancel)
 
-        let sep = NSBox(); sep.boxType = .separator
-
+        // Stack — no login row, that's in menu bar
         let stack = NSStackView(views: [
-            titleLabel,
             pluggedCard,
-            batteryHeader,
+            sectionLabel(L.s(.batterySection)),
             batterySegment,
             batteryCard,
-            sep
+            warnRow,
+            langRow,
         ])
         stack.orientation = .vertical
         stack.alignment = .leading
-        stack.spacing = 14
+        stack.spacing = 12
         stack.translatesAutoresizingMaskIntoConstraints = false
+        cv.addSubview(stack)
 
         let btnRow = NSStackView(views: [cancelBtn, saveBtn])
         btnRow.orientation = .horizontal
         btnRow.spacing = 8
         btnRow.translatesAutoresizingMaskIntoConstraints = false
-
-        cv.addSubview(stack)
         cv.addSubview(btnRow)
 
         NSLayoutConstraint.activate([
+            headerBar.topAnchor.constraint(equalTo: cv.topAnchor),
+            headerBar.leadingAnchor.constraint(equalTo: cv.leadingAnchor),
+            headerBar.trailingAnchor.constraint(equalTo: cv.trailingAnchor),
+            headerBar.heightAnchor.constraint(equalToConstant: 52),
+
+            headerTitle.centerXAnchor.constraint(equalTo: headerBar.centerXAnchor),
+            headerTitle.centerYAnchor.constraint(equalTo: headerBar.centerYAnchor, constant: 8),
+
+            sep.topAnchor.constraint(equalTo: headerBar.bottomAnchor),
+            sep.leadingAnchor.constraint(equalTo: cv.leadingAnchor),
+            sep.trailingAnchor.constraint(equalTo: cv.trailingAnchor),
+
+            stack.topAnchor.constraint(equalTo: sep.bottomAnchor, constant: 20),
             stack.leadingAnchor.constraint(equalTo: cv.leadingAnchor, constant: 24),
             stack.trailingAnchor.constraint(equalTo: cv.trailingAnchor, constant: -24),
-            stack.topAnchor.constraint(equalTo: cv.topAnchor, constant: 24),
 
             pluggedCard.widthAnchor.constraint(equalTo: stack.widthAnchor),
             batterySegment.widthAnchor.constraint(equalTo: stack.widthAnchor),
             batteryCard.widthAnchor.constraint(equalTo: stack.widthAnchor),
+            warnRow.widthAnchor.constraint(equalTo: stack.widthAnchor),
+            langRow.widthAnchor.constraint(equalTo: stack.widthAnchor),
 
             btnRow.trailingAnchor.constraint(equalTo: cv.trailingAnchor, constant: -24),
             btnRow.bottomAnchor.constraint(equalTo: cv.bottomAnchor, constant: -20),
+
+            saveBtn.widthAnchor.constraint(equalToConstant: 100),
+            saveBtn.heightAnchor.constraint(equalToConstant: 36),
+            cancelBtn.widthAnchor.constraint(equalToConstant: 80),
+            cancelBtn.heightAnchor.constraint(equalToConstant: 36),
         ])
     }
 
-    private func loadPrefs() {
-        pluggedURL = prefs.pluggedURL
-        batteryMode = prefs.batteryMode
-        batteryURL = prefs.batteryURL
+    private func sectionLabel(_ text: String) -> NSTextField {
+        let lbl = NSTextField(labelWithString: text.uppercased())
+        lbl.font = .systemFont(ofSize: 10, weight: .semibold)
+        lbl.textColor = .tertiaryLabelColor
+        return lbl
+    }
 
-        pluggedCard.setURL(pluggedURL)
-        batteryCard.setURL(batteryURL)
+    // MARK: - Login Permission Warning Row
 
-        switch batteryMode {
-        case "same":    batterySegment.selectedSegment = 0; batteryCard.isHidden = true
-        case "default": batterySegment.selectedSegment = 1; batteryCard.isHidden = true
-        case "custom":  batterySegment.selectedSegment = 2; batteryCard.isHidden = false
-        default:        batterySegment.selectedSegment = 0; batteryCard.isHidden = true
+    private func makeLoginWarningRow() -> NSView {
+        let row = NSView()
+        row.wantsLayer = true
+        row.layer?.cornerRadius = 10
+        row.layer?.backgroundColor = NSColor.systemOrange.withAlphaComponent(0.12).cgColor
+        row.layer?.borderColor = NSColor.systemOrange.withAlphaComponent(0.4).cgColor
+        row.layer?.borderWidth = 0.5
+        row.translatesAutoresizingMaskIntoConstraints = false
+        row.heightAnchor.constraint(equalToConstant: 52).isActive = true
+
+        let iv = NSImageView()
+        iv.image = NSImage(systemSymbolName: "exclamationmark.triangle.fill", accessibilityDescription: nil)
+        iv.contentTintColor = .systemOrange
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        row.addSubview(iv)
+
+        let lbl = NSTextField(labelWithString: L.s(.loginPermissionTitle))
+        lbl.font = .systemFont(ofSize: 13, weight: .medium)
+        lbl.textColor = .labelColor
+        lbl.translatesAutoresizingMaskIntoConstraints = false
+        row.addSubview(lbl)
+
+        let sub = NSTextField(labelWithString: L.s(.loginPermissionSub))
+        sub.font = .systemFont(ofSize: 11)
+        sub.textColor = .secondaryLabelColor
+        sub.translatesAutoresizingMaskIntoConstraints = false
+        row.addSubview(sub)
+
+        let btn = NSButton(title: L.s(.loginPermissionButton), target: self, action: #selector(openLoginItems))
+        btn.bezelStyle = .rounded
+        btn.font = .systemFont(ofSize: 11, weight: .medium)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        row.addSubview(btn)
+
+        NSLayoutConstraint.activate([
+            iv.leadingAnchor.constraint(equalTo: row.leadingAnchor, constant: 14),
+            iv.centerYAnchor.constraint(equalTo: row.centerYAnchor),
+            iv.widthAnchor.constraint(equalToConstant: 20),
+            iv.heightAnchor.constraint(equalToConstant: 20),
+
+            lbl.leadingAnchor.constraint(equalTo: iv.trailingAnchor, constant: 10),
+            lbl.topAnchor.constraint(equalTo: row.topAnchor, constant: 10),
+
+            sub.leadingAnchor.constraint(equalTo: lbl.leadingAnchor),
+            sub.topAnchor.constraint(equalTo: lbl.bottomAnchor, constant: 2),
+
+            btn.trailingAnchor.constraint(equalTo: row.trailingAnchor, constant: -14),
+            btn.centerYAnchor.constraint(equalTo: row.centerYAnchor),
+        ])
+        return row
+    }
+
+    private func refreshWarningVisibility() {
+        guard #available(macOS 13.0, *) else {
+            loginWarningRow?.isHidden = true
+            return
         }
+        let requested = UserDefaults.standard.bool(forKey: "loginRequested")
+        let status = SMAppService.mainApp.status
+        let needsWarning = requested && status != .enabled
+        loginWarningRow?.isHidden = !needsWarning
+    }
+
+    // MARK: - Language Row
+
+    private func makeLangRow() -> NSView {
+        let row = NSView()
+        row.wantsLayer = true
+        row.layer?.cornerRadius = 10
+        row.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
+        row.layer?.borderColor = NSColor.separatorColor.cgColor
+        row.layer?.borderWidth = 0.5
+        row.translatesAutoresizingMaskIntoConstraints = false
+        row.heightAnchor.constraint(equalToConstant: 44).isActive = true
+
+        let iv = NSImageView()
+        iv.image = NSImage(systemSymbolName: "globe", accessibilityDescription: nil)
+        iv.contentTintColor = .controlAccentColor
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        row.addSubview(iv)
+
+        let lbl = NSTextField(labelWithString: L.s(.language))
+        lbl.font = .systemFont(ofSize: 13)
+        lbl.translatesAutoresizingMaskIntoConstraints = false
+        row.addSubview(lbl)
+
+        let popup = NSPopUpButton()
+        popup.isBordered = true
+        popup.bezelStyle = .rounded
+        popup.font = .systemFont(ofSize: 12)
+        popup.translatesAutoresizingMaskIntoConstraints = false
+
+        for lang in AppLanguage.allCases {
+            popup.addItem(withTitle: lang.displayName)
+            popup.lastItem?.representedObject = lang
+        }
+        for item in popup.itemArray {
+            if let l = item.representedObject as? AppLanguage, l == L.lang {
+                popup.select(item)
+            }
+        }
+        popup.target = self
+        popup.action = #selector(languageChanged(_:))
+        row.addSubview(popup)
+
+        NSLayoutConstraint.activate([
+            iv.leadingAnchor.constraint(equalTo: row.leadingAnchor, constant: 14),
+            iv.centerYAnchor.constraint(equalTo: row.centerYAnchor),
+            iv.widthAnchor.constraint(equalToConstant: 20),
+            iv.heightAnchor.constraint(equalToConstant: 20),
+
+            lbl.leadingAnchor.constraint(equalTo: iv.trailingAnchor, constant: 10),
+            lbl.centerYAnchor.constraint(equalTo: row.centerYAnchor),
+
+            popup.trailingAnchor.constraint(equalTo: row.trailingAnchor, constant: -14),
+            popup.centerYAnchor.constraint(equalTo: row.centerYAnchor),
+            popup.widthAnchor.constraint(equalToConstant: 110),
+        ])
+        return row
+    }
+
+    // MARK: - Actions
+
+    @objc private func openLoginItems() {
+        if let url = URL(string: "x-apple.systempreferences:com.apple.LoginItems-Settings.extension") {
+            NSWorkspace.shared.open(url)
+        }
+    }
+
+    @objc private func languageChanged(_ sender: NSPopUpButton) {
+        guard let lang = sender.selectedItem?.representedObject as? AppLanguage else { return }
+        L.lang = lang
+        // Rebuild to apply new language
+        window?.contentView?.subviews.forEach { $0.removeFromSuperview() }
+        buildUI()
+        loadPrefs()
     }
 
     @objc private func batterySegmentChanged() {
@@ -145,13 +313,26 @@ final class SettingsWindow: NSWindowController, NSWindowDelegate {
         case 2: batteryMode = "custom";  batteryCard.isHidden = false
         default: break
         }
-        window?.layoutIfNeeded()
+    }
+
+    private func loadPrefs() {
+        pluggedURL  = prefs.pluggedURL
+        batteryMode = prefs.batteryMode
+        batteryURL  = prefs.batteryURL
+        pluggedCard.setURL(pluggedURL)
+        batteryCard.setURL(batteryURL)
+        switch batteryMode {
+        case "same":    batterySegment.selectedSegment = 0; batteryCard.isHidden = true
+        case "default": batterySegment.selectedSegment = 1; batteryCard.isHidden = true
+        case "custom":  batterySegment.selectedSegment = 2; batteryCard.isHidden = false
+        default:        batterySegment.selectedSegment = 0; batteryCard.isHidden = true
+        }
     }
 
     @objc private func save() {
-        prefs.pluggedURL = pluggedURL
+        prefs.pluggedURL  = pluggedURL
         prefs.batteryMode = batteryMode
-        prefs.batteryURL = batteryURL
+        prefs.batteryURL  = batteryURL
         settingsDelegate?.settingsDidChange()
         window?.close()
     }
@@ -166,74 +347,112 @@ final class MediaCard: NSView {
     var onPick: ((URL) -> Void)?
     var onClear: (() -> Void)?
 
-    private let iconView  = NSImageView()
-    private let nameLabel = NSTextField(labelWithString: "Dosya seçilmedi")
-    private let pickBtn   = NSButton(title: "Seç…", target: nil, action: nil)
-    private let clearBtn  = NSButton(title: "Kaldır", target: nil, action: nil)
-    private let headerLabel: NSTextField
+    private let iconView   = NSImageView()
+    private let nameLabel  = NSTextField(labelWithString: "")
+    private let subLabel   = NSTextField(labelWithString: "")
+    private let pickBtn    : NSButton
+    private let clearBtn   : NSButton
+    let headerLabel        : NSTextField
+    private let accent: NSColor
 
-    init(label: String, icon: String) {
-        headerLabel = NSTextField(labelWithString: label)
+    init(label: String, icon: String, accent: NSColor) {
+        self.accent = accent
+        self.headerLabel = NSTextField(labelWithString: label)
+        self.pickBtn  = NSButton(title: L.s(.pick),  target: nil, action: nil)
+        self.clearBtn = NSButton(title: L.s(.clear), target: nil, action: nil)
         super.init(frame: .zero)
         wantsLayer = true
-        layer?.cornerRadius = 10
+        layer?.cornerRadius = 12
         layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-        layer?.borderColor = NSColor.separatorColor.cgColor
-        layer?.borderWidth = 1
+        layer?.borderColor = NSColor.separatorColor.withAlphaComponent(0.5).cgColor
+        layer?.borderWidth = 0.5
 
-        headerLabel.font = .systemFont(ofSize: 13, weight: .medium)
+        // Icon badge
+        let iconBg = NSView()
+        iconBg.wantsLayer = true
+        iconBg.layer?.cornerRadius = 8
+        iconBg.layer?.backgroundColor = accent.withAlphaComponent(0.12).cgColor
+        iconBg.translatesAutoresizingMaskIntoConstraints = false
 
+        iconView.translatesAutoresizingMaskIntoConstraints = false
         if let img = NSImage(systemSymbolName: icon, accessibilityDescription: nil) {
             iconView.image = img
-            iconView.contentTintColor = .secondaryLabelColor
         }
-        iconView.frame = NSRect(x: 0, y: 0, width: 18, height: 18)
+        iconView.contentTintColor = accent
+        iconBg.addSubview(iconView)
 
-        let headerStack = NSStackView(views: [iconView, headerLabel])
-        headerStack.orientation = .horizontal
-        headerStack.spacing = 6
+        headerLabel.font = .systemFont(ofSize: 13, weight: .semibold)
+        headerLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        nameLabel.lineBreakMode = .byTruncatingMiddle
-        nameLabel.textColor = .secondaryLabelColor
+        nameLabel.stringValue = L.s(.noFileSelected)
         nameLabel.font = .systemFont(ofSize: 12)
+        nameLabel.textColor = .secondaryLabelColor
+        nameLabel.lineBreakMode = .byTruncatingMiddle
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        subLabel.stringValue = L.s(.fileFormats)
+        subLabel.font = .systemFont(ofSize: 11)
+        subLabel.textColor = .tertiaryLabelColor
+        subLabel.translatesAutoresizingMaskIntoConstraints = false
 
         pickBtn.bezelStyle = .rounded
-        pickBtn.target = self
-        pickBtn.action = #selector(doPick)
+        pickBtn.font = .systemFont(ofSize: 12, weight: .medium)
+        pickBtn.translatesAutoresizingMaskIntoConstraints = false
+        pickBtn.target = self; pickBtn.action = #selector(doPick)
 
         clearBtn.bezelStyle = .rounded
-        clearBtn.target = self
-        clearBtn.action = #selector(doClear)
+        clearBtn.font = .systemFont(ofSize: 12)
+        clearBtn.translatesAutoresizingMaskIntoConstraints = false
+        clearBtn.target = self; clearBtn.action = #selector(doClear)
         clearBtn.isEnabled = false
 
-        let btnRow = NSStackView(views: [clearBtn, pickBtn])
-        btnRow.orientation = .horizontal
-        btnRow.spacing = 8
-
-        let stack = NSStackView(views: [headerStack, nameLabel, btnRow])
-        stack.orientation = .vertical
-        stack.alignment = .leading
-        stack.spacing = 8
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(stack)
+        [iconBg, headerLabel, nameLabel, subLabel, pickBtn, clearBtn].forEach { addSubview($0) }
 
         NSLayoutConstraint.activate([
-            stack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 14),
-            stack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -14),
-            stack.topAnchor.constraint(equalTo: topAnchor, constant: 12),
-            stack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12),
+            iconBg.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 14),
+            iconBg.topAnchor.constraint(equalTo: topAnchor, constant: 14),
+            iconBg.widthAnchor.constraint(equalToConstant: 36),
+            iconBg.heightAnchor.constraint(equalToConstant: 36),
+
+            iconView.centerXAnchor.constraint(equalTo: iconBg.centerXAnchor),
+            iconView.centerYAnchor.constraint(equalTo: iconBg.centerYAnchor),
+            iconView.widthAnchor.constraint(equalToConstant: 18),
+            iconView.heightAnchor.constraint(equalToConstant: 18),
+
+            headerLabel.leadingAnchor.constraint(equalTo: iconBg.trailingAnchor, constant: 10),
+            headerLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16),
+
+            nameLabel.leadingAnchor.constraint(equalTo: headerLabel.leadingAnchor),
+            nameLabel.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 2),
+            nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -14),
+
+            subLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 14),
+            subLabel.topAnchor.constraint(equalTo: iconBg.bottomAnchor, constant: 8),
+
+            pickBtn.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -14),
+            pickBtn.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12),
+
+            clearBtn.trailingAnchor.constraint(equalTo: pickBtn.leadingAnchor, constant: -8),
+            clearBtn.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12),
+
+            bottomAnchor.constraint(equalTo: subLabel.bottomAnchor, constant: 44),
         ])
     }
 
     required init?(coder: NSCoder) { fatalError() }
 
     func setURL(_ url: URL?) {
-        nameLabel.stringValue = url?.lastPathComponent ?? "Dosya seçilmedi"
+        nameLabel.stringValue = url?.lastPathComponent ?? L.s(.noFileSelected)
         nameLabel.textColor = url == nil ? .secondaryLabelColor : .labelColor
+        subLabel.isHidden = url != nil
         clearBtn.isEnabled = url != nil
+        layer?.borderColor = url != nil
+            ? accent.withAlphaComponent(0.4).cgColor
+            : NSColor.separatorColor.withAlphaComponent(0.5).cgColor
     }
 
-    func pick(in window: NSWindow) {
+    @objc private func doPick() {
+        guard let w = window else { return }
         let panel = NSOpenPanel()
         panel.allowedContentTypes = [
             .mpeg4Movie, .gif, .jpeg, .png, .heic,
@@ -242,11 +461,10 @@ final class MediaCard: NSView {
         ]
         panel.allowsMultipleSelection = false
         panel.canChooseDirectories = false
-        panel.beginSheetModal(for: window) { [weak self] resp in
+        panel.beginSheetModal(for: w) { [weak self] resp in
             if resp == .OK, let url = panel.url { self?.onPick?(url) }
         }
     }
 
-    @objc private func doPick() { guard let w = window else { return }; pick(in: w) }
     @objc private func doClear() { setURL(nil); onClear?() }
 }

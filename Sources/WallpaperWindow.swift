@@ -37,7 +37,7 @@ final class WallpaperWindow: NSWindow {
     // MARK: - Yükleme (geçiş efektiyle)
 
     func load(url: URL, animated: Bool = true) {
-        if animated && currentURL != nil {
+        if animated {
             fadeTransition {
                 self.loadMedia(url: url)
             }
