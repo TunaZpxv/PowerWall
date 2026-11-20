@@ -94,6 +94,9 @@ final class SettingsWindow: NSWindowController, NSWindowDelegate {
         // Language row
         let langRow = makeLangRow()
 
+        // Buy Me a Coffee row
+        let coffeeRow = makeCoffeeRow()
+
         // Buttons
         saveBtn.title   = L.s(.save)
         cancelBtn.title = L.s(.cancel)
@@ -113,6 +116,7 @@ final class SettingsWindow: NSWindowController, NSWindowDelegate {
             batteryCard,
             warnRow,
             langRow,
+            coffeeRow,
         ])
         stack.orientation = .vertical
         stack.alignment = .leading
@@ -148,6 +152,7 @@ final class SettingsWindow: NSWindowController, NSWindowDelegate {
             batteryCard.widthAnchor.constraint(equalTo: stack.widthAnchor),
             warnRow.widthAnchor.constraint(equalTo: stack.widthAnchor),
             langRow.widthAnchor.constraint(equalTo: stack.widthAnchor),
+            coffeeRow.widthAnchor.constraint(equalTo: stack.widthAnchor),
 
             btnRow.trailingAnchor.constraint(equalTo: cv.trailingAnchor, constant: -24),
             btnRow.bottomAnchor.constraint(equalTo: cv.bottomAnchor, constant: -20),
@@ -229,6 +234,61 @@ final class SettingsWindow: NSWindowController, NSWindowDelegate {
         let status = SMAppService.mainApp.status
         let needsWarning = requested && status != .enabled
         loginWarningRow?.isHidden = !needsWarning
+    }
+
+    // MARK: - Buy Me a Coffee Row
+
+    private func makeCoffeeRow() -> NSView {
+        let row = NSView()
+        row.wantsLayer = true
+        row.layer?.cornerRadius = 10
+        row.layer?.backgroundColor = NSColor(red: 1.0, green: 0.82, blue: 0.1, alpha: 0.08).cgColor
+        row.layer?.borderColor = NSColor(red: 1.0, green: 0.82, blue: 0.1, alpha: 0.35).cgColor
+        row.layer?.borderWidth = 0.5
+        row.translatesAutoresizingMaskIntoConstraints = false
+        row.heightAnchor.constraint(equalToConstant: 48).isActive = true
+
+        let emoji = NSTextField(labelWithString: "☕️")
+        emoji.font = .systemFont(ofSize: 20)
+        emoji.translatesAutoresizingMaskIntoConstraints = false
+        row.addSubview(emoji)
+
+        let lbl = NSTextField(labelWithString: "Support PowerWall")
+        lbl.font = .systemFont(ofSize: 13, weight: .semibold)
+        lbl.textColor = .labelColor
+        lbl.translatesAutoresizingMaskIntoConstraints = false
+        row.addSubview(lbl)
+
+        let sub = NSTextField(labelWithString: "buymeacoffee.com/weoxstudio")
+        sub.font = .systemFont(ofSize: 11)
+        sub.textColor = .secondaryLabelColor
+        sub.translatesAutoresizingMaskIntoConstraints = false
+        row.addSubview(sub)
+
+        let btn = NSButton(title: "Buy me a coffee", target: self, action: #selector(openCoffee))
+        btn.bezelStyle = .rounded
+        btn.font = .systemFont(ofSize: 12, weight: .medium)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        row.addSubview(btn)
+
+        NSLayoutConstraint.activate([
+            emoji.leadingAnchor.constraint(equalTo: row.leadingAnchor, constant: 14),
+            emoji.centerYAnchor.constraint(equalTo: row.centerYAnchor),
+
+            lbl.leadingAnchor.constraint(equalTo: emoji.trailingAnchor, constant: 10),
+            lbl.topAnchor.constraint(equalTo: row.topAnchor, constant: 9),
+
+            sub.leadingAnchor.constraint(equalTo: lbl.leadingAnchor),
+            sub.topAnchor.constraint(equalTo: lbl.bottomAnchor, constant: 2),
+
+            btn.trailingAnchor.constraint(equalTo: row.trailingAnchor, constant: -14),
+            btn.centerYAnchor.constraint(equalTo: row.centerYAnchor),
+        ])
+        return row
+    }
+
+    @objc private func openCoffee() {
+        NSWorkspace.shared.open(URL(string: "https://buymeacoffee.com/weoxstudio")!)
     }
 
     // MARK: - Language Row
