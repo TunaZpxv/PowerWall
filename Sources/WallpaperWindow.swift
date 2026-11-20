@@ -16,7 +16,8 @@ final class WallpaperWindow: NSWindow {
     init() {
         let screen = NSScreen.main ?? NSScreen.screens[0]
         super.init(contentRect: screen.frame, styleMask: .borderless, backing: .buffered, defer: false)
-        level = NSWindow.Level(rawValue: Int(CGWindowLevelForKey(.desktopWindow)))
+        // desktopWindow + 1: masaüstü ikonlarının üstünde ama kilit ekranının altında
+        level = NSWindow.Level(rawValue: Int(CGWindowLevelForKey(.desktopWindow)) + 1)
         collectionBehavior = [.canJoinAllSpaces, .stationary, .ignoresCycle]
         isOpaque = true
         hasShadow = false
