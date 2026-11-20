@@ -39,7 +39,7 @@
 
 <div align="center">
 
-<video src="https://media.githubusercontent.com/media/WeoxStudio/PowerWall/main/video2.mov" controls width="100%"></video>
+<video src="https://raw.githubusercontent.com/WeoxStudio/PowerWall/main/video2.mov" controls width="100%"></video>
 
 </div>
 
