@@ -39,7 +39,7 @@
 
 <div align="center">
 
-[![PowerWall Demo](https://img.youtube.com/vi/g8qWP2xXVsU/hqdefault.jpg)](https://www.youtube.com/shorts/g8qWP2xXVsU)
+[![PowerWall Demo](https://img.youtube.com/vi/EIQHC2-jHkY/hqdefault.jpg)](https://www.youtube.com/watch?v=EIQHC2-jHkY)
 
 </div>
 
