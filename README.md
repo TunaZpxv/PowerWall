@@ -167,9 +167,12 @@ If PowerWall saves you a little joy every day ☕
 <br>
 
 <div align="center">
-  <a href="mailto:tunazpxv@gmail.com">
-    <img src="assets/contact-icon.jpg" width="32" alt="Contact">
-  </a>
+  <table>
+    <tr>
+      <td><a href="mailto:tunazpxv@gmail.com"><img src="assets/contact-icon.jpg" width="28" height="28" alt="Contact"></a></td>
+      <td><b>tunazpxv@gmail.com</b></td>
+    </tr>
+  </table>
 </div>
 
 ---
