@@ -39,7 +39,7 @@
 
 <div align="center">
 
-[Watch the demo on YouTube](https://www.youtube.com/shorts/g8qWP2xXVsU)
+<video src="video2.mov" controls width="100%"></video>
 
 </div>
 
