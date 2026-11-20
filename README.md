@@ -14,13 +14,13 @@
   A lightweight macOS menu bar app that automatically switches your wallpaper<br>
   the instant your power state changes — with a cinematic fade transition.</p>
 
-  <a href="https://github.com/WeoxStudio/PowerWall/releases/latest">
+  <a href="https://github.com/TunaZpxv/PowerWall/releases/latest">
     <img src="https://img.shields.io/github/v/release/WeoxStudio/PowerWall?style=flat-square&color=3fb950&label=latest+release" alt="Latest Release">
   </a>
-  <a href="https://github.com/WeoxStudio/PowerWall/stargazers">
+  <a href="https://github.com/TunaZpxv/PowerWall/stargazers">
     <img src="https://img.shields.io/github/stars/WeoxStudio/PowerWall?style=flat-square&color=3fb950" alt="Stars">
   </a>
-  <a href="https://github.com/WeoxStudio/PowerWall/blob/main/LICENSE">
+  <a href="https://github.com/TunaZpxv/PowerWall/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/WeoxStudio/PowerWall?style=flat-square&color=3fb950" alt="MIT License">
   </a>
   <img src="https://img.shields.io/badge/macOS-14%2B-3fb950?style=flat-square" alt="macOS 14+">
@@ -114,7 +114,7 @@ Both sources run on .common RunLoop mode
 
 ### Download (recommended)
 
-1. Go to [Releases](https://github.com/WeoxStudio/PowerWall/releases/latest)
+1. Go to [Releases](https://github.com/TunaZpxv/PowerWall/releases/latest)
 2. Download `PowerWall.app.zip`
 3. Unzip and move to `/Applications`
 4. Right-click → Open (first launch only, to bypass Gatekeeper)
@@ -122,7 +122,7 @@ Both sources run on .common RunLoop mode
 ### Build from source
 
 ```bash
-git clone https://github.com/WeoxStudio/PowerWall.git
+git clone https://github.com/TunaZpxv/PowerWall.git
 cd PowerWall
 ./build.sh
 open build/PowerWall.app
@@ -152,7 +152,7 @@ From now on PowerWall handles everything automatically.
 
 If PowerWall saves you a little joy every day ☕
 
-<a href="https://buymeacoffee.com/weoxstudio">
+<a href="https://buymeacoffee.com/tunazpxv">
   <img src="https://img.shields.io/badge/Buy%20me%20a%20coffee-%E2%98%95-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me A Coffee">
 </a>
 
@@ -171,7 +171,7 @@ MIT — see [LICENSE](LICENSE).
 ---
 
 <div align="center">
-  Made with ♥ by <a href="https://github.com/WeoxStudio">TunaZpxv</a>
+  Made with ♥ by <a href="https://github.com/TunaZpxv">TunaZpxv</a>
   <br><br>
   <sub>
     macOS wallpaper switcher · menu bar utility · power state detection · Swift · open source
