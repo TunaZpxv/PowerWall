@@ -34,16 +34,20 @@ Set a wallpaper for **plugged in** and a separate one for **on battery**. The mo
 
 ---
 
-## By the numbers
+## Performance & Stats
 
-| | |
+<div align="center">
+  <img src="assets/stats.png" width="900" alt="PowerWall Performance Stats" />
+</div>
+
+| Metric | Value |
 |---|---|
-| **Detection latency** | < 100 ms via IOKit + burst polling |
-| **Supported formats** | MP4 · MOV · GIF · PNG · JPG · HEIC · WEBP |
+| **Detection latency** | < 100 ms — IOKit callback + burst poll |
 | **Memory footprint** | ~12 MB at idle |
-| **CPU usage** | ~0% at idle, < 1% on power change |
+| **CPU usage** | ~0% idle · < 1% on power change |
 | **Startup time** | < 0.3 s to menu bar |
-| **Swift source** | ~800 lines across 9 files |
+| **Supported formats** | MP4 · MOV · GIF · PNG · JPG · HEIC · WEBP |
+| **Swift source** | ~800 lines · 9 files |
 | **macOS requirement** | 14 Sonoma or later |
 | **Architecture** | Apple Silicon · Intel |
 
@@ -54,10 +58,10 @@ Set a wallpaper for **plugged in** and a separate one for **on battery**. The mo
 ```
 Power change
     │
-    ├─ IOKit IOPSNotificationCreateRunLoopSource   ← instant hardware event
-    │       └─ burst poll ×10 at 100 ms intervals  ← confirms the change fast
+    ├─ IOKit IOPSNotificationCreateRunLoopSource   ← instant hardware event (~15ms)
+    │       └─ burst poll ×10 at 100ms intervals  ← confirms the change fast
     │
-    └─ Steady Timer every 1 s (fallback)           ← catches edge cases
+    └─ Steady Timer every 1s (fallback)           ← catches edge cases
 
 Both run on .common RunLoop mode → fire even while the menu is open
 ```
