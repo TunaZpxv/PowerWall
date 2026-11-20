@@ -39,7 +39,7 @@
 
 <div align="center">
 
-<video src="https://raw.githubusercontent.com/WeoxStudio/PowerWall/main/video2.mov" controls width="100%"></video>
+[![PowerWall Demo](https://img.youtube.com/vi/g8qWP2xXVsU/hqdefault.jpg)](https://www.youtube.com/shorts/g8qWP2xXVsU)
 
 </div>
 
