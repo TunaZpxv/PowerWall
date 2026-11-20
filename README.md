@@ -39,7 +39,9 @@
 
 <div align="center">
 
-<video src="video2.mov" controls width="100%"></video>
+[![PowerWall Demo](https://img.youtube.com/vi/g8qWP2xXVsU/maxresdefault.jpg)](https://www.youtube.com/shorts/g8qWP2xXVsU)
+
+[Download demo video (video2.mov)](video2.mov)
 
 </div>
 
