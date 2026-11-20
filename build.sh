@@ -20,6 +20,7 @@ $SWIFT \
   Sources/WallpaperManager.swift \
   Sources/Prefs.swift \
   Sources/SettingsWindow.swift \
+  Sources/OnboardingWindow.swift \
   Sources/AppDelegate.swift \
   -o "$MACOS/$BINARY" \
   -framework AppKit \

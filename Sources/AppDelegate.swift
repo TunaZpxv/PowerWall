@@ -11,6 +11,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, SettingsDelegate {
 
     func applicationDidFinishLaunching(_ note: Notification) {
         setupMenuBar()
+        if !UserDefaults.standard.bool(forKey: "onboarded") {
+            let ow = OnboardingWindow(); ow.showWindow(nil); NSApp.activate(ignoringOtherApps: true)
+        }
         power.onChange = { [weak self] pluggedIn in
             self?.applyWallpaper(pluggedIn: pluggedIn)
         }
