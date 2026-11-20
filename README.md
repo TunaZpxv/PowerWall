@@ -67,11 +67,6 @@ Supports video loops (MP4/MOV), animated GIFs, and static images (PNG/JPG/HEIC/W
 
 ---
 
-## Performance & Stats
-
-<div align="center">
-  <img src="assets/stats.png" width="860" alt="PowerWall performance statistics — detection latency, memory, CPU, startup time" />
-</div>
 
 | Metric | Value | Notes |
 |---|---|---|
@@ -176,7 +171,7 @@ MIT — see [LICENSE](LICENSE).
 ---
 
 <div align="center">
-  Made with ♥ by <a href="https://github.com/WeoxStudio">WeoxStudio</a>
+  Made with ♥ by <a href="https://github.com/WeoxStudio">TunaZpxv</a>
   <br><br>
   <sub>
     macOS wallpaper switcher · menu bar utility · power state detection · Swift · open source
