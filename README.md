@@ -164,7 +164,9 @@ If PowerWall saves you a little joy every day ☕
   <img src="https://img.shields.io/badge/Buy%20me%20a%20coffee-%E2%98%95-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me A Coffee">
 </a>
 
-<br>
+---
+
+## Contact
 
 <div align="center">
   <table>
