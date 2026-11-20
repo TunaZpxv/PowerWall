@@ -6,7 +6,7 @@
 -->
 
 <div align="center">
-  <img src="assets/icon.png" width="128" alt="PowerWall — macOS wallpaper switcher" /><br><br>
+  <img src="logo.png" width="128" alt="PowerWall — macOS wallpaper switcher" /><br><br>
 
   <h1>PowerWall</h1>
 
