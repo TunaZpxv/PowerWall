@@ -156,6 +156,10 @@ From now on PowerWall handles everything automatically.
 
 ---
 
+## 🗺️ Roadmap
+
+See [ROADMAP.md](ROADMAP.md) for the 2.0 plan.
+
 ## Support
 
 If PowerWall saves you a little joy every day ☕
