@@ -20,34 +20,37 @@
 
 Automatically pauses animations under high CPU/thermal load and restores them when normal, with a single notification in battery mode.
 
-- 🔋 Thermal state + Low Power Mode as primary signals
-- 📈 Total CPU as a secondary signal
-- 🔁 Stable transitions (hysteresis + short rolling averages)
-- 🔔 One notification per load spike, muteable
-- 🎛️ Toggle + sensitivity + pause reason shown in menu
-- 🎬 Reuse existing fade transition
-- 📉 Proof: README CPU/energy measurements with feature on/off
+**What it will do:**
+- If CPU load rises and battery-mode content is static (image or macOS default), animation turns off and the system returns to battery-mode content. When load normalizes, animation returns.
+- If CPU load rises but the user uses animated content (video or GIF) in battery mode, the system changes nothing. It only plays a single voice notification: "CPU load is high, closing the wallpaper is recommended."
 
-```mermaid
-pie title Signal Weights (v2.0)
-    "Thermal state" : 45
-    "Low Power Mode" : 30
-    "Total CPU" : 25
-```
+**How to do it well:**
+- Decision logic must be single and pure. Inputs: load state, battery-mode content type, user setting. Output: one of three options — continue, switch to static, notify only. System-independent, so every combination is unit-testable. This is where the project's engineering value lies.
+- The signal should reflect real system strain. Thermal state and Low Power Mode should be primary signals; total CPU is a secondary signal. Notification-based, not continuous polling, to keep the app lightweight.
+- The app must not include its own load in measurement. Otherwise video playback raises load, app stops itself, load drops, restarts — an infinite loop.
+- Transitions must be stable. Use short-term averages instead of instant spikes; different thresholds for off and on. Prevents animation flickering.
+- Notification should not be annoying. Once per load rise, no repeat until load normalizes, sound can be disabled separately.
+- User stays in control. Feature toggleable, sensitivity selectable, current pause reason visible in menu.
+- Visual consistency. Reuse the existing fade effect so transitions aren't abrupt.
+- Proven impact. Measure CPU and energy with feature on/off under load, add to README.
 
 ## 📚 Part 2: Built-in Library 🎨
 
 A curated, on-demand downloadable collection of live wallpapers. Users browse categories, preview, and install with one click; content is stored in a known folder and can be removed at any time.
 
-- 🪶 Keep app < 1 MB (content downloaded on demand)
-- 🗂️ Separate content manifest (name, category, preview, size, license, author)
-- ⚖️ Only redistributable content, author + license shown
-- 🎞️ Short, seamless, low-bitrate loops
-- 🔒 Network only when library is used, no data collection
-- ✅ Download verification, error handling, cancel
-- 📁 Known folder + user can delete
-- 🖥️ "Library" tab, categories, previews, progress
-- 🔌 Assign to plugged/battery; moving content on battery triggers "notify only" rule
+**What it will do:**
+Users without their own live wallpaper pick an option from the in-app list and click "Install"; content is downloaded and becomes usable.
+
+**How to do it well:**
+- Keep the app lightweight. Wallpapers must not be embedded; downloaded on demand. Preserves the "under 1 MB app" property.
+- List updatable separately from the app. Content manifest (name, category, preview, size, license, author) in a separate file so new wallpapers don't require an app update.
+- Clear licensing. Only your own or redistributable content; author and license shown per item. No unauthorized use of others' work.
+- Optimized content. Short, seamless, low-bitrate loops. Heavy content drains battery and constantly triggers Part 1 protection.
+- Privacy transparency. App currently uses no network. Network access only when library is used; no data collected; stated clearly in README.
+- Reliable downloads. Verify file integrity, handle connection drops and errors, allow cancel.
+- User control over files. Downloads live in a known folder; user can delete from the app.
+- Simple UI. Separate "Library" tab in settings, categories, preview images, download progress.
+- Seamless integration. Downloaded content assignable to "plugged in" or "on battery" easily. If animated content chosen for battery mode, Part 1 "notify only" rule applies automatically.
 
 ## ☕ Support & Contact
 
