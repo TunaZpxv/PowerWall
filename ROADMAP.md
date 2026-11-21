@@ -18,6 +18,8 @@
 
 ## 🧠 Part 1: CPU-load-aware protection ⚡
 
+Automatically pauses animations under high CPU/thermal load and restores them when normal, with a single notification in battery mode.
+
 - 🔋 Thermal state + Low Power Mode as primary signals
 - 📈 Total CPU as a secondary signal
 - 🔁 Stable transitions (hysteresis + short rolling averages)
