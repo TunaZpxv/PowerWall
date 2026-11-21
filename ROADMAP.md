@@ -35,6 +35,8 @@ pie title Signal Weights (v2.0)
 
 ## 📚 Part 2: Built-in Library 🎨
 
+A curated, on-demand downloadable collection of live wallpapers. Users browse categories, preview, and install with one click; content is stored in a known folder and can be removed at any time.
+
 - 🪶 Keep app < 1 MB (content downloaded on demand)
 - 🗂️ Separate content manifest (name, category, preview, size, license, author)
 - ⚖️ Only redistributable content, author + license shown
@@ -44,17 +46,6 @@ pie title Signal Weights (v2.0)
 - 📁 Known folder + user can delete
 - 🖥️ "Library" tab, categories, previews, progress
 - 🔌 Assign to plugged/battery; moving content on battery triggers "notify only" rule
-
-```mermaid
-bar
-    title Library Targets
-    x-axis Category
-    y-axis Items
-    "Nature" : 6
-    "Abstract" : 5
-    "City" : 4
-    "Minimal" : 5
-```
 
 ## ☕ Support & Contact
 
