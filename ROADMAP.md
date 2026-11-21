@@ -2,7 +2,7 @@
 
 > 🚀 Goal: A smarter, lighter, more user-friendly live wallpaper experience.
 
-**Target release window:** within the first 3 months (2026).
+**Target release window:** within the first 3 months (2027).
 
 ## 📊 Metrics (aligned with README)
 
