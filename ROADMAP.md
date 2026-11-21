@@ -9,7 +9,7 @@
 | Metric | v1.0 | v2.0 Target | Notes |
 |---|---|---|---|
 | ⚡ Detection latency | < 100 ms | < 100 ms | IOKit hardware event |
-| 🧠 Memory footprint | ~12 MB | ~12 MB | Idle, no video playing |
+| 🧠 Memory footprint | < 1 MB | < 1 MB | Idle, no video playing |
 | ⚙️ CPU usage | ~0% idle / <1% event | lower under load | M-series chip |
 | 🚀 Startup time | < 0.3 s | < 0.3 s | Launch to menu bar ready |
 | 📦 App bundle size | < 1 MB | < 1 MB | Compiled binary only |
