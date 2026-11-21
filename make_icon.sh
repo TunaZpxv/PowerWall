@@ -1,9 +1,9 @@
 #!/bin/bash
-# Generates an aesthetic leaf app icon (PowerWall.icns)
+# Generates an aesthetic leaf app icon (PoweWall.icns)
 set -e
 cd "$(dirname "$0")"
 
-ICONSET="PowerWall.iconset"
+ICONSET="PoweWall.iconset"
 rm -rf "$ICONSET"
 mkdir "$ICONSET"
 
@@ -205,6 +205,6 @@ cp "$ICONSET/icon_256x256.png" "$ICONSET/icon_128x128@2x.png"
 cp "$ICONSET/icon_512x512.png" "$ICONSET/icon_256x256@2x.png"
 cp "$ICONSET/icon_1024x1024.png" "$ICONSET/icon_512x512@2x.png"
 
-iconutil -c icns "$ICONSET" -o PowerWall.icns
+iconutil -c icns "$ICONSET" -o PoweWall.icns
 rm -rf "$ICONSET"
-echo "✅  PowerWall.icns oluşturuldu"
+echo "✅  PoweWall.icns oluşturuldu"

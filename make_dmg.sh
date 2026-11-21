@@ -1,18 +1,18 @@
 #!/bin/bash
 # Gerçek kurulum DMG'si oluşturur
-# Kullanıcı PowerWall.app'i Applications'a sürüklediğinde:
+# Kullanıcı PoweWall.app'i Applications'a sürüklediğinde:
 #   1. Ses çalar (uygulama içinden)
 #   2. DMG otomatik unmount olur
 #   3. Uygulama başlar
 set -e
 cd "$(dirname "$0")"
 
-APP="build/PowerWall.app"
-DMG_NAME="PowerWall-1.0"
+APP="build/PoweWall.app"
+DMG_NAME="PoweWall-1.0"
 DMG_FINAL="build/${DMG_NAME}.dmg"
 DMG_TMP="build/${DMG_NAME}-tmp.dmg"
 STAGING="build/dmg-staging"
-VOLUME_NAME="PowerWall"
+VOLUME_NAME="PoweWall"
 BG_IMG="build/dmg_bg.png"
 
 echo "▶ DMG hazırlanıyor..."
@@ -27,7 +27,7 @@ python3 make_dmg_bg.py "$BG_IMG"
 # 3. Staging
 rm -rf "$STAGING"
 mkdir -p "$STAGING"
-cp -R "$APP" "$STAGING/PowerWall.app"
+cp -R "$APP" "$STAGING/PoweWall.app"
 ln -s /Applications "$STAGING/Applications"
 mkdir -p "$STAGING/.background"
 cp "$BG_IMG" "$STAGING/.background/background.png"
@@ -66,7 +66,7 @@ tell application "Finder"
         set arrangement of viewOptions to not arranged
         set icon size of viewOptions to 96
         set background picture of viewOptions to file ".background:background.png"
-        set position of item "PowerWall.app" of container window to {152, 185}
+        set position of item "PoweWall.app" of container window to {152, 185}
         set position of item "Applications" of container window to {388, 185}
         close
         open

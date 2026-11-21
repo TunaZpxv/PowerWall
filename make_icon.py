@@ -1,5 +1,5 @@
 """
-Generates an aesthetic leaf icon for PowerWall.
+Generates an aesthetic leaf icon for PoweWall.
 Deep green background, bright leaf with midrib, veins, stem, and a soft sheen.
 """
 import math
@@ -164,7 +164,7 @@ def draw_icon(size: int) -> Image.Image:
 
 
 def main():
-    out_dir = sys.argv[1] if len(sys.argv) > 1 else "PowerWall.iconset"
+    out_dir = sys.argv[1] if len(sys.argv) > 1 else "PoweWall.iconset"
     os.makedirs(out_dir, exist_ok=True)
 
     sizes = [16, 32, 64, 128, 256, 512, 1024]
@@ -186,7 +186,7 @@ def main():
     for src, dst in pairs:
         shutil.copy(os.path.join(out_dir, src), os.path.join(out_dir, dst))
 
-    print("Done. Run:  iconutil -c icns PowerWall.iconset -o PowerWall.icns")
+    print("Done. Run:  iconutil -c icns PoweWall.iconset -o PoweWall.icns")
 
 
 if __name__ == "__main__":

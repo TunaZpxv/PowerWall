@@ -69,7 +69,7 @@
 
 ## What it does
 
-Set a wallpaper for **plugged in** and a separate one for **on battery**. The moment macOS sees a power state change, PowerWall fires in under 100 ms — no manual action needed. Plug in your charger and your desk wallpaper appears. Unplug and it switches back. Transitions use a smooth fade to black so the swap never feels abrupt.
+Set a wallpaper for **plugged in** and a separate one for **on battery**. The moment macOS sees a power state change, PoweWall fires in under 100 ms — no manual action needed. Plug in your charger and your desk wallpaper appears. Unplug and it switches back. Transitions use a smooth fade to black so the swap never feels abrupt.
 
 Supports video loops (MP4/MOV), animated GIFs, and static images (PNG/JPG/HEIC/WEBP).
 
