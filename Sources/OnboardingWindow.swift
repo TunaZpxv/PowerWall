@@ -43,7 +43,7 @@ final class OnboardingWindow: NSWindowController, NSWindowDelegate {
         appIcon.translatesAutoresizingMaskIntoConstraints = false
         leftPanel.addSubview(appIcon)
 
-        let appName = makeLabel("PoweWall", size: 22, weight: .bold, color: .white)
+        let appName = makeLabel("PowerWall", size: 22, weight: .bold, color: .white)
         let appSub  = makeLabel(L.s(.appTagline), size: 12, weight: .regular,
                                 color: NSColor.white.withAlphaComponent(0.7))
         appName.translatesAutoresizingMaskIntoConstraints = false

@@ -48,7 +48,7 @@ bg = Image.alpha_composite(bg, dot)
 # ── Extract real icons ────────────────────────────────────────────────────────
 app_path    = "/tmp/_pw_app_icon.png"
 folder_path = "/tmp/_pw_folder_icon.png"
-os.system(f"sips -s format png /Users/tunasia/Desktop/PoweWall/PoweWall.icns --out {app_path} -z 96 96 >/dev/null 2>&1")
+os.system(f"sips -s format png /Users/tunasia/Desktop/PowerWall/PowerWall.icns --out {app_path} -z 96 96 >/dev/null 2>&1")
 os.system(f"sips -s format png /System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/ApplicationsFolderIcon.icns --out {folder_path} -z 96 96 >/dev/null 2>&1")
 
 app_icon    = Image.open(app_path).convert("RGBA")
@@ -85,10 +85,10 @@ def centered_at(draw, text, font, cx, y, color):
     tw = bb[2]-bb[0]
     draw.text((cx - tw//2, y), text, font=font, fill=color)
 
-centered_at(draw, "PoweWall",   font_name, 140, LABEL_Y,   (255,255,255,220))
+centered_at(draw, "PowerWall",   font_name, 140, LABEL_Y,   (255,255,255,220))
 centered_at(draw, "Applications",font_name, 400, LABEL_Y,   (255,255,255,220))
 
-ver = "PoweWall 1.0  ·  Requires macOS 14+"
+ver = "PowerWall 1.0  ·  Requires macOS 14+"
 vbb = draw.textbbox((0,0), ver, font=font_ver)
 vw = vbb[2]-vbb[0]
 draw.text(((W-vw)//2, H-22), ver, font=font_ver, fill=(255,255,255,55))

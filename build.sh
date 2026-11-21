@@ -2,16 +2,16 @@
 set -e
 cd "$(dirname "$0")"
 
-APP="build/PoweWall.app"
+APP="build/PowerWall.app"
 MACOS="$APP/Contents/MacOS"
 RESOURCES="$APP/Contents/Resources"
-BINARY="PoweWall"
+BINARY="PowerWall"
 SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
 SWIFT="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
 
 rm -rf build
 mkdir -p "$MACOS" "$RESOURCES"
-cp PoweWall.icns "$RESOURCES/PoweWall.icns"
+cp PowerWall.icns "$RESOURCES/PowerWall.icns"
 
 $SWIFT \
   Sources/main.swift \
@@ -38,11 +38,11 @@ cat > "$APP/Contents/Info.plist" << 'PLIST'
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CFBundleName</key><string>PoweWall</string>
-    <key>CFBundleDisplayName</key><string>PoweWall</string>
+    <key>CFBundleName</key><string>PowerWall</string>
+    <key>CFBundleDisplayName</key><string>PowerWall</string>
     <key>CFBundleIdentifier</key><string>com.powerwall.app</string>
-    <key>CFBundleExecutable</key><string>PoweWall</string>
-    <key>CFBundleIconFile</key><string>PoweWall</string>
+    <key>CFBundleExecutable</key><string>PowerWall</string>
+    <key>CFBundleIconFile</key><string>PowerWall</string>
     <key>CFBundlePackageType</key><string>APPL</string>
     <key>CFBundleShortVersionString</key><string>1.0</string>
     <key>LSUIElement</key><true/>

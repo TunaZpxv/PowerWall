@@ -6,22 +6,22 @@
 -->
 
 <div align="center">
-  <img src="logo.png" width="128" alt="PoweWall — macOS wallpaper switcher" /><br><br>
+  <img src="logo.png" width="128" alt="PowerWall — macOS wallpaper switcher" /><br><br>
 
-  <h1>PoweWall</h1>
+  <h1>PowerWall</h1>
 
   <p><strong>Your wallpaper knows when you're plugged in.</strong><br>
   A lightweight macOS menu bar app that automatically switches your wallpaper<br>
   the instant your power state changes — with a cinematic fade transition.</p>
 
-  <a href="https://github.com/TunaZpxv/PoweWall/releases/latest">
-    <img src="https://img.shields.io/github/v/release/WeoxStudio/PoweWall?style=flat-square&color=3fb950&label=latest+release" alt="Latest Release">
+  <a href="https://github.com/TunaZpxv/PowerWall/releases/latest">
+    <img src="https://img.shields.io/github/v/release/WeoxStudio/PowerWall?style=flat-square&color=3fb950&label=latest+release" alt="Latest Release">
   </a>
-  <a href="https://github.com/TunaZpxv/PoweWall/stargazers">
-    <img src="https://img.shields.io/github/stars/WeoxStudio/PoweWall?style=flat-square&color=3fb950" alt="Stars">
+  <a href="https://github.com/TunaZpxv/PowerWall/stargazers">
+    <img src="https://img.shields.io/github/stars/WeoxStudio/PowerWall?style=flat-square&color=3fb950" alt="Stars">
   </a>
-  <a href="https://github.com/TunaZpxv/PoweWall/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/TunaZpxv/PoweWall?style=flat-square&color=3fb950" alt="MIT License">
+  <a href="https://github.com/TunaZpxv/PowerWall/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/TunaZpxv/PowerWall?style=flat-square&color=3fb950" alt="MIT License">
   </a>
   <img src="https://img.shields.io/badge/macOS-14%2B-3fb950?style=flat-square" alt="macOS 14+">
   <img src="https://img.shields.io/badge/Swift-5-3fb950?style=flat-square&logo=swift&logoColor=white" alt="Swift 5">
@@ -39,7 +39,7 @@
 
 <div align="center">
 
-[PoweWall Video](https://img.youtube.com/vi/EIQHC2-jHkY/hqdefault.jpg)](https://www.youtube.com/watch?v=EIQHC2-jHkY)
+[![PowerWall Video](https://img.youtube.com/vi/EIQHC2-jHkY/hqdefault.jpg)](https://www.youtube.com/watch?v=EIQHC2-jHkY)
 
 </div>
 
@@ -69,7 +69,7 @@
 
 ## What it does
 
-Set a wallpaper for **plugged in** and a separate one for **on battery**. The moment macOS sees a power state change, PoweWall fires in under 100 ms — no manual action needed. Plug in your charger and your desk wallpaper appears. Unplug and it switches back. Transitions use a smooth fade to black so the swap never feels abrupt.
+Set a wallpaper for **plugged in** and a separate one for **on battery**. The moment macOS sees a power state change, PowerWall fires in under 100 ms — no manual action needed. Plug in your charger and your desk wallpaper appears. Unplug and it switches back. Transitions use a smooth fade to black so the swap never feels abrupt.
 
 Supports video loops (MP4/MOV), animated GIFs, and static images (PNG/JPG/HEIC/WEBP).
 
@@ -122,18 +122,18 @@ Both sources run on .common RunLoop mode
 
 ### Download (recommended)
 
-1. Go to [Releases](https://github.com/TunaZpxv/PoweWall/releases/latest)
-2. Download `PoweWall.app.zip`
+1. Go to [Releases](https://github.com/TunaZpxv/PowerWall/releases/latest)
+2. Download `PowerWall.app.zip`
 3. Unzip and move to `/Applications`
 4. Right-click → Open (first launch only, to bypass Gatekeeper)
 
 ### Build from source
 
 ```bash
-git clone https://github.com/TunaZpxv/PoweWall.git
-cd PoweWall
+git clone https://github.com/TunaZpxv/PowerWall.git
+cd PowerWall
 ./build.sh
-open build/PoweWall.app
+open build/PowerWall.app
 ```
 
 **Requires:** Xcode command line tools
@@ -152,13 +152,13 @@ xcode-select --install
 4. Set the **Battery** mode — same file, macOS default, or a different file
 5. Click **Save**
 
-From now on PoweWall handles everything automatically.
+From now on PowerWall handles everything automatically.
 
 ---
 
 ## Support
 
-If PoweWall saves you a little joy every day ☕
+If PowerWall saves you a little joy every day ☕
 
 <a href="https://buymeacoffee.com/tunazpxv">
   <img src="https://img.shields.io/badge/Buy%20me%20a%20coffee-%E2%98%95-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me A Coffee">

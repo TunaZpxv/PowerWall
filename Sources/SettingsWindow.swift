@@ -32,7 +32,7 @@ final class SettingsWindow: NSWindowController, NSWindowDelegate {
             backing: .buffered,
             defer: false
         )
-        win.title = "PoweWall"
+        win.title = "PowerWall"
         win.titlebarAppearsTransparent = true
         win.center()
         self.init(window: win)
@@ -253,7 +253,7 @@ final class SettingsWindow: NSWindowController, NSWindowDelegate {
         emoji.translatesAutoresizingMaskIntoConstraints = false
         row.addSubview(emoji)
 
-        let lbl = NSTextField(labelWithString: "Support PoweWall")
+        let lbl = NSTextField(labelWithString: "Support PowerWall")
         lbl.font = .systemFont(ofSize: 13, weight: .semibold)
         lbl.textColor = .labelColor
         lbl.translatesAutoresizingMaskIntoConstraints = false
