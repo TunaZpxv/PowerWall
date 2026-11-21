@@ -34,11 +34,7 @@
 
 <div align="center">
 
-[
-
-![PowerWall Video](https://img.youtube.com/vi/EIQHC2-jHkY/hqdefault.jpg)
-
-](https://www.youtube.com/watch?v=EIQHC2-jHkY)
+[![PowerWall Video](https://img.youtube.com/vi/EIQHC2-jHkY/hqdefault.jpg)](https://www.youtube.com/watch?v=EIQHC2-jHkY)
 
 <a href="https://www.youtube.com/@Tuna-zpxv">
   <img src="https://img.shields.io/badge/YouTube-Subscribe-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="YouTube Channel">
@@ -86,3 +82,136 @@ Supports video loops (MP4/MOV), animated GIFs, and static images (PNG/JPG/HEIC/W
 ---
 
 ## How detection works
+
+```
+Power change detected
+    │
+    ├─ IOKit  IOPSNotificationCreateRunLoopSource   ~15 ms  ← hardware event
+    │             └─ burst poll ×10 @ 100 ms                ← confirms fast
+    │
+    └─ Steady Timer every 1 s (fallback)                    ← edge cases
+
+Both sources run on .common RunLoop mode
+→ fire even while the menu is open (not blocked by NSMenu's event tracking loop)
+```
+
+---
+
+## Features
+
+- **Instant** — detects plug/unplug in < 100 ms, works while the menu is open
+- **Any media** — video (MP4/MOV loop), animated GIF, static image (PNG/JPG/HEIC/WEBP)
+- **Cinematic fade** — full-screen overlay fades to black and back in both directions
+- **Three battery modes** — same as plugged-in · macOS default wallpaper · custom file
+- **Launch at login** — single toggle, no manual plist editing
+- **Zero footprint** — no Dock icon, no background agents, pure menu bar
+- **Lock screen aware** — pauses video on screen lock, resumes on unlock
+- **Bilingual** — English and Turkish, switchable at runtime
+
+> 💡 **Battery tip:** a static image in battery mode saves the most power.
+
+---
+
+## Privacy
+
+PowerWall makes no network connections and collects no data. Everything runs locally on your Mac.
+
+---
+
+## Installation
+
+### Download (recommended)
+
+1. Go to [Releases](https://github.com/TunaZpxv/PowerWall/releases/latest)
+2. Download `PowerWall.app.zip`
+3. Unzip and move to `/Applications`
+4. Right-click → Open (first launch only, to bypass Gatekeeper)
+
+**Verify the download**
+
+- SHA-256: `f84ff7e7605e6265b895349fbbeb4b7616116d359fec5da7118eee5ea3c57100`
+- [VirusTotal scan report](https://www.virustotal.com/gui/file/f84ff7e7605e6265b895349fbbeb4b7616116d359fec5da7118eee5ea3c57100)
+
+PowerWall is not yet code-signed, so a few antivirus engines may flag unsigned apps. The source is fully open — you can read it or build it yourself.
+
+To check the hash yourself:
+
+```bash
+shasum -a 256 PowerWall.app.zip
+```
+
+### Build from source
+
+```bash
+git clone https://github.com/TunaZpxv/PowerWall.git
+cd PowerWall
+./build.sh
+open build/PowerWall.app
+```
+
+**Requires:** Xcode command line tools
+
+```bash
+xcode-select --install
+```
+
+---
+
+## Usage
+
+1. Click the **leaf icon** in the menu bar
+2. Open **Settings** (⌘,)
+3. Set a wallpaper for **When Plugged In** — choose any video, GIF, or image
+4. Set the **Battery** mode — same file, macOS default, or a different file
+5. Click **Save**
+
+From now on PowerWall handles everything automatically.
+
+---
+
+## Roadmap
+
+See [ROADMAP.md](ROADMAP.md) for the 2.0 plan: CPU-load-aware protection and a built-in wallpaper library.
+
+---
+
+## Support
+
+If PowerWall saves you a little joy every day ☕
+
+<a href="https://buymeacoffee.com/tunazpxv">
+  <img src="https://img.shields.io/badge/Buy%20me%20a%20coffee-%E2%98%95-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me A Coffee">
+</a>
+
+---
+
+## Contact
+
+<div align="center">
+  <table>
+    <tr>
+      <td><a href="mailto:tunazpxv@gmail.com"><img src="assets/contact-icon.jpg" width="28" height="28" alt="Contact"></a></td>
+      <td><b>tunazpxv@gmail.com</b></td>
+    </tr>
+  </table>
+</div>
+
+---
+
+## Contributing
+
+Pull requests are welcome. For major changes please open an issue first to discuss what you'd like to change.
+
+---
+
+## License
+
+MIT — see [LICENSE](LICENSE).
+
+---
+
+<div align="center">
+  Made with ♥ by <a href="https://github.com/TunaZpxv">TunaZpxv</a>
+  <br><br>
+  <sub>macOS wallpaper switcher · menu bar utility · power state detection · Swift · open source</sub>
+</div>
