@@ -1,59 +1,67 @@
 # 🗺️ PowerWall 2.0 Roadmap
 
-> 🚀 Hedef: Daha akıllı, daha hafif, daha kullanıcı dostu bir canlı duvar kağıdı deneyimi.
+> 🚀 Goal: A smarter, lighter, more user-friendly live wallpaper experience.
 
-## 📊 Tahmini Sayısal Hedefler
+**Target release window:** within the first 3 months (Q1 2026).
 
-| Metrik | v1.0 | v2.0 (hedef) |
-|---|---|---|
-| Uygulama boyutu | ~1.2 MB | < 1 MB |
-| CPU (animasyon açık, yük altında) | %18-25 | %8-12 |
-| Enerji (pil, 1 saat) | ~4.5 Wh | ~2.1 Wh |
-| Bildirim gecikmesi | - | < 1 sn |
-| Kütüphane öğe sayısı | 0 | 20+ |
+## 📊 Metrics (aligned with README)
 
-## 🧠 Bölüm 1: İşlemci yüküne duyarlı koruma ⚡
+| Metric | v1.0 | v2.0 Target | Notes |
+|---|---|---|---|
+| ⚡ Detection latency | < 100 ms | < 100 ms | IOKit hardware event |
+| 🧠 Memory footprint | ~12 MB | ~12 MB | Idle, no video playing |
+| ⚙️ CPU usage | ~0% idle / <1% event | lower under load | M-series chip |
+| 🚀 Startup time | < 0.3 s | < 0.3 s | Launch to menu bar ready |
+| 📦 App bundle size | < 1 MB | < 1 MB | Compiled binary only |
+| 🎬 Supported formats | 7 | 7 | MP4 · MOV · GIF · PNG · JPG · HEIC · WEBP |
+| 📝 Swift source | ~800 lines | ~1200 lines | 9 → 12 files, zero deps |
 
-- 🔋 Termal durum + Düşük Güç Modu birincil sinyal
-- 📈 Toplam CPU ek sinyal olarak kalır
-- 🔁 Geçişler kararlı (hysteresis + kısa ortalamalar)
-- 🔔 Yük başına tek bildirim, sessize alınabilir
-- 🎛️ Aç/kapa + hassasiyet seçimi + menüde duraklatma nedeni
-- 🎬 Fade efekti ile tutarlı geçiş
-- 📉 Kanıt: açık/kapalı CPU & enerji ölçümü README'ye eklenecek
+## 🧠 Part 1: CPU-load-aware protection ⚡
+
+- 🔋 Thermal state + Low Power Mode as primary signals
+- 📈 Total CPU as a secondary signal
+- 🔁 Stable transitions (hysteresis + short rolling averages)
+- 🔔 One notification per load spike, muteable
+- 🎛️ Toggle + sensitivity + pause reason shown in menu
+- 🎬 Reuse existing fade transition
+- 📉 Proof: README CPU/energy measurements with feature on/off
 
 ```mermaid
-pie title Sinyal Ağırlıkları (v2.0)
-    "Termal durum" : 45
-    "Düşük Güç Modu" : 30
-    "Toplam CPU" : 25
+pie title Signal Weights (v2.0)
+    "Thermal state" : 45
+    "Low Power Mode" : 30
+    "Total CPU" : 25
 ```
 
-## 📚 Bölüm 2: Hazır kütüphane 🎨
+## 📚 Part 2: Built-in Library 🎨
 
-- 🪶 1 MB altı uygulama korunur (içerik indirilmeli)
-- 🗂️ Ayrı içerik listesi (ad, kategori, önizleme, boyut, lisans, yapımcı)
-- ⚖️ Sadece yeniden dağıtımına izin verilen içerikler
-- 🎞️ Kısa, kesintisiz, düşük bitrate videolar
-- 🔒 Ağ erişimi yalnızca kütüphane için, veri toplanmaz
-- ✅ İndirme doğrulama, hata yönetimi, iptal
-- 📁 Bilinen klasör + kullanıcı silme yetkisi
-- 🖥️ "Kütüphane" sekmesi, kategoriler, önizleme, ilerleme
-- 🔌 Şarj/pil ataması + pil modunda hareketli içerikte "sadece bildir" kuralı
+- 🪶 Keep app < 1 MB (content downloaded on demand)
+- 🗂️ Separate content manifest (name, category, preview, size, license, author)
+- ⚖️ Only redistributable content, author + license shown
+- 🎞️ Short, seamless, low-bitrate loops
+- 🔒 Network only when library is used, no data collection
+- ✅ Download verification, error handling, cancel
+- 📁 Known folder + user can delete
+- 🖥️ "Library" tab, categories, previews, progress
+- 🔌 Assign to plugged/battery; moving content on battery triggers "notify only" rule
 
 ```mermaid
 bar
-    title Kütüphane Hedefleri
-    x-axis Kategori
-    y-axis Öğe Sayısı
-    "Doğa" : 6
-    "Soyut" : 5
-    "Şehir" : 4
+    title Library Targets
+    x-axis Category
+    y-axis Items
+    "Nature" : 6
+    "Abstract" : 5
+    "City" : 4
     "Minimal" : 5
 ```
 
-## ☕ Destek & İletişim
+## ☕ Support & Contact
 
-- ▶️ [YouTube Kanalı](https://www.youtube.com/@Tuna-zpxv)
-- 💛 [Buy Me a Coffee](https://www.buymeacoffee.com/)
-- 📧 Contact: tuna@example.com
+- ▶️ [YouTube Channel](https://www.youtube.com/@Tuna-zpxv)
+- 💛 [Buy Me a Coffee](https://buymeacoffee.com/tunazpxv)
+- 📧 Contact: tunazpxv@gmail.com
+
+---
+
+Made with ♥ by [TunaZpxv](https://github.com/TunaZpxv)
